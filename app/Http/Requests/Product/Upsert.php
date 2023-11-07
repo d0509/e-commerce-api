@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Product;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class Upsert extends FormRequest
 {
@@ -22,7 +25,21 @@ class Upsert extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ''
+            'name' => 'required|min:3',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'is_active' => 'required|boolean',
+            'category_id' => 'required|exists:categories,id'
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors()
+        ]));
     }
 }

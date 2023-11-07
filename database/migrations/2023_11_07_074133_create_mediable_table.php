@@ -4,14 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMediaTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable('media')) {
             Schema::create(
@@ -23,12 +21,8 @@ class CreateMediaTable extends Migration
                     $table->string('filename');
                     $table->string('extension', 32);
                     $table->string('mime_type', 128);
-                    $table->string('aggregate_type', 32);
                     $table->integer('size')->unsigned();
                     $table->timestamps();
-
-                    $table->unique(['disk', 'directory', 'filename', 'extension']);
-                    $table->index('aggregate_type');
                 }
             );
         }
@@ -57,10 +51,8 @@ class CreateMediaTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('mediables');
         Schema::dropIfExists('media');
@@ -73,4 +65,4 @@ class CreateMediaTable extends Migration
     {
         return config('mediable.connection_name', parent::getConnection());
     }
-}
+};
