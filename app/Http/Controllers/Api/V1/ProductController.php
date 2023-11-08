@@ -11,10 +11,11 @@ class ProductController extends Controller
 {
     protected $productService;
 
-    public function __construct(ProductService $productService){
+    public function __construct(ProductService $productService)
+    {
         $this->productService = $productService;
     }
-    
+
     public function index()
     {
         return $this->productService->collection();
@@ -25,35 +26,18 @@ class ProductController extends Controller
         return $this->productService->store($request);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        return $this->productService->show($id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+   public function destroy(string $id)
     {
-        //
+        return $this->productService->destroy($id);
     }
 }

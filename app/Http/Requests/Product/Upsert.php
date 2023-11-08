@@ -30,7 +30,9 @@ class Upsert extends FormRequest
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
             'is_active' => 'required|boolean',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|array|exists:categories,id',
+            'image' => 'required|array|min:1',
+            'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

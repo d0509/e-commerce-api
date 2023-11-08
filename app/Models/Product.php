@@ -23,6 +23,11 @@ class Product extends Model
         'is_active',
     ];
 
+    public function media()
+    {
+        return $this->hasManyThrough(Media::class, Mediable::class, 'mediable_id', 'id', 'id', 'media_id')->where('mediables.mediable_type', Product::class);
+    }
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

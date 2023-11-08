@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mediable extends Model
 {
+    public $timestamps = false;
     use HasFactory;
 
     protected $fillable = [
@@ -17,5 +18,13 @@ class Mediable extends Model
         'order'
     ];
 
-    
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class);
+    // }
+
+    public function media()
+    {
+        return $this->belongsTo(Media::class);
+    }
 }

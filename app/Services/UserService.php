@@ -6,12 +6,18 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class UserService{
-    public function index($inputs){
-        $user = User::where('id', Auth::id())->select('first_name','last_name','email','mobile_no','address','avatar')->with('city')->get();
-        return response()->json([
-            'user' => $user,
-            'success' =>true,
-        ]);
+    public function index($id){
+        $userData = User::find($id);
+        if($userData){
+            $user = User::where('id', Auth::id())->select('first_name','last_name','email','mobile_no','address','avatar')->with('city')->get();
+            return response()->json([
+                'user' => $user,
+                'success' =>true,
+            ]);
+        } else {
+            return response()->json(['message'=>'Sorry! requested user not found.' ,'success' => false]) ;
+        }
+        
     }
 
     public function update($inputs,$user){
