@@ -26,18 +26,18 @@ class ProductController extends Controller
         return $this->productService->store($request);
     }
 
-    public function show(string $id)
+    public function show(string $ulid)
     {
-        return $this->productService->show($id);
+        return $this->productService->show($ulid);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Upsert $request, string $ulid)
     {
-        //
+       return $this->productService->update($request,$ulid);
     }
 
-   public function destroy(string $id)
+   public function destroy(string $ulid)
     {
-        return $this->productService->destroy($id);
+        return $this->productService->destroy($ulid);
     }
 }

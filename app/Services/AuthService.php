@@ -54,9 +54,12 @@ class AuthService
         $token = $tokenResult->plainTextToken;
 
         return response()->json([
+            'message' => 'You have logged in successfully.',
             'accessToken' => $token,
             'token_type' => 'Bearer',
-        ]);
+            'user' => $user,
+            'success' => true,
+        ],200);
     }
 
     public function logout($request)

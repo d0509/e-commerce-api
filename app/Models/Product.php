@@ -15,12 +15,15 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'ulid',
         'slug',
         'description',
         'price',
         'quantity',
         'is_active',
+    ];
+
+    protected $hidden = [
+        'id'
     ];
 
     public function media()

@@ -16,6 +16,7 @@ return new class extends Migration
                 'media',
                 function (Blueprint $table) {
                     $table->increments('id');
+                    $table->ulid();
                     $table->string('disk', 32);
                     $table->string('directory');
                     $table->string('filename');
@@ -35,12 +36,10 @@ return new class extends Migration
                     $table->string('mediable_type');
                     $table->integer('mediable_id')->unsigned();
                     $table->string('tag');
-                    $table->integer('order')->unsigned();
 
                     $table->primary(['media_id', 'mediable_type', 'mediable_id', 'tag']);
                     $table->index(['mediable_id', 'mediable_type']);
                     $table->index('tag');
-                    $table->index('order');
                     $table->foreign('media_id')
                         ->references('id')->on('media')
                         ->cascadeOnDelete();

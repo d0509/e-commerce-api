@@ -6,8 +6,14 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class UserService{
-    public function index($id){
-        $userData = User::find($id);
+
+    public function resource(){
+        $user = User::where('id',Auth::id())->get();
+        return response()->json(['user' => $user, 'success'=>true],200);
+    }
+
+    public function show($id){
+        $userData = User::where('id',Auth::id())->first();
         if($userData){
             $user = User::where('id', Auth::id())->select('first_name','last_name','email','mobile_no','address','avatar')->with('city')->get();
             return response()->json([
@@ -20,7 +26,7 @@ class UserService{
         
     }
 
-    public function update($inputs,$user){
+    public function update($inputs,$ulid){
         $user = Auth::user();
         if($inputs->has('avatar')){
             unlink((public_path('storage/avatar/')).$user->avatar);
@@ -52,7 +58,7 @@ class UserService{
             ]);
         }
 
-        return response()->json(['message' => 'User Updated Successfully','success' => true]);
+        return response()->json(['message' => 'User Updated Successfully','success' => true,'user' => $user],200);
 
     }
 

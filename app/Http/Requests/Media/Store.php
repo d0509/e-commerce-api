@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Product;
+namespace App\Http\Requests\Media;
 
 use Illuminate\Foundation\Http\FormRequest;
-class Upsert extends FormRequest
+
+class Store extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,15 +22,8 @@ class Upsert extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:3',
-            'description' => 'required',
-            'price' => 'required|numeric',
-            'quantity' => 'required|numeric',
-            'is_active' => 'required|boolean',
-            'category_id' => 'required|array|exists:categories,id',
-            'image' => 'required|exists:media,id',
-            
+            'image' => 'required|min:1|array',
+            'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
-
 }
