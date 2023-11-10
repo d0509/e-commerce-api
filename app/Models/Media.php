@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -20,10 +21,6 @@ class Media extends Model
         'size',
     ];
 
-    protected $hidden = [
-        'id'
-    ];
-
     public function uniqueIds()
     {
         return [
@@ -31,9 +28,13 @@ class Media extends Model
         ];
     }
 
+    public function getUrlAttribute()
+    {
+        return url(Storage::url("{$this->directory}/{$this->filename}.{$this->extension}"));
+    }
+
     public function getUrl()
     {
-        // Replace 'your_base_url' with the actual base URL where your images are stored
         return asset('storage/' . $this->directory . '/' . $this->filename . '.' . $this->extension);
     }
 }

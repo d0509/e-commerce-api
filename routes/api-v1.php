@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('Logout');
-    Route::resource('user', UserController::class)->only('index','update');
-    Route::resource('product', ProductController::class);
-    Route::resource('media',MediaController::class)->only('store');
+    Route::apiResource('user/profile', UserController::class)->only('index','update');
+    Route::apiResource('product', ProductController::class);
+    Route::apiResource('media',MediaController::class)->only('store','destroy');
 });

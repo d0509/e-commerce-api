@@ -34,8 +34,9 @@ class Upsert extends FormRequest
         ];
 
         if($this->_method == 'PUT'){
-            $rules['email'] .=  Auth::id();
+            $rules['email'] .=  auth()->user()->id;
             $rules['avatar'] = 'nullable|image:jpeg,png,jpg,svg|max:2048';
+            // dd($rules);
         } else {
             $rules['password'] = 'required|min:6|max:10';
             $rules['confirm_password'] = 'required|same:password';

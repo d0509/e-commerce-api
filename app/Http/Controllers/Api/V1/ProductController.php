@@ -28,7 +28,7 @@ class ProductController extends Controller
 
     public function show(string $ulid)
     {
-        return $this->productService->show($ulid);
+        return $this->productService->resource($ulid);
     }
 
     public function update(Upsert $request, string $ulid)

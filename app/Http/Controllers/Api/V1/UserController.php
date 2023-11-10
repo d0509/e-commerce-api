@@ -22,8 +22,8 @@ class UserController extends Controller
         return $this->userService->resource();
     }
 
-    public function show(string $ulid){
-        return $this->userService->show($ulid);
+    public function show(User $user){
+        return $this->userService->resource();
     }
 
     public function update(Upsert $request, string $ulid){

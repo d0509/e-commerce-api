@@ -20,4 +20,8 @@ class MediaController extends Controller
     {
         return $this->mediaService->store($request);       
     }
+
+    public function destroy(string $ulid){
+        return $this->mediaService->destroy($ulid);
+    }
 }

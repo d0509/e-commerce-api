@@ -23,7 +23,7 @@ class Store extends FormRequest
     {
         return [
             'image' => 'required|min:1|array',
-            'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'image.*' => 'image|mimes:jpeg,png,jpg|max:10240',
         ];
     }
 }

@@ -14,30 +14,22 @@ class AuthService
 {
     public function signUp($inputs)
     {
-        try {
+        $originalName = $inputs->avatar->getClientOriginalName();
+        $timestamp = time();
+        $avatar = $timestamp . '_' . $originalName;
+        User::create([
+            'first_name' => $inputs->first_name,
+            'last_name' => $inputs->last_name,
+            'email' => $inputs->email,
+            'password' => Hash::make($inputs->password),
+            'city_id' => $inputs->city_id,
+            'address' => $inputs->address,
+            'avatar' => $avatar,
+            'mobile_no'  => $inputs->mobile_no,
+        ]);
 
-            $originalName = $inputs->avatar->getClientOriginalName();
-
-            $timestamp = time();
-
-            $avatar = $timestamp . '_' . $originalName;
-
-            User::create([
-                'first_name' => $inputs->first_name,
-                'last_name' => $inputs->last_name,
-                'email' => $inputs->email,
-                'password' => Hash::make($inputs->password),
-                'city_id' => $inputs->city_id,
-                'address' => $inputs->address,
-                'avatar' => $avatar,
-                'mobile_no'  => $inputs->mobile_no,
-            ]);
-
-            $inputs->avatar->move(public_path('/storage/avatar'), $avatar);
-            return response()->json(['message' => 'User Created Successfully', 'success' => true]);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e], 500);
-        }
+        $inputs->avatar->move(public_path('/storage/avatar'), $avatar);
+        return response()->json(['message' => 'User Created Successfully', 'success' => true]);
     }
 
     public function login($inputs)
@@ -59,7 +51,7 @@ class AuthService
             'token_type' => 'Bearer',
             'user' => $user,
             'success' => true,
-        ],200);
+        ], 200);
     }
 
     public function logout($request)

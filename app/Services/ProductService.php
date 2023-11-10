@@ -17,7 +17,7 @@ class ProductService
 
   public function collection()
   {
-    $product = Product::with('media')->get();
+    $product = Product::with(['media','category'])->get();
     if (count($product) == 0) {
       return response()->json(['message' => 'Products not found', 'success' => false], 404);
     } else {
@@ -50,37 +50,23 @@ class ProductService
     return response()->json(['message' => 'Product Created Successfully', 'success' => true, 'product' => $product], 200);
   }
 
-  public function show($ulid)
+  public function resource($ulid)
   {
-    $product = Product::with(['media:disk,directory,filename,extension,size,mime_type', 'category:name,id'])->where('ulid', $ulid)->get();
-    // dd($product);
-
-    if ($product) {
-      if (isset($product->media)) {
-        $mediaUrls = $product->media->map(function ($media) {
-          return $media->getUrl();
-        });
-        return response()->json(['product' => $product, 'success' => true]);
-      } else {
-        $product = Product::where('ulid', $ulid);
-        if (count($product) == 0) {
-          return response()->json(['message' => 'Product not found'], 404);
-        } else {
-          return response()->json(['product' => $product, 'success' => true], 200);
-        }
-        // dd($product);
-      }
+    $product = Product::with(['media', 'category'])->where('ulid', $ulid)->first();
+    if (!$product) {
+      return response()->json(['message' => 'Product not found.', 'success' => false], 404);
     } else {
-      return response()->json(['message' => 'Sorry! No such products found.', 'success' => false]);
+      return response()->json(['product' => $product, 'success' => true], 200);
     }
   }
 
   public function destroy($ulid)
   {
-    $product = Product::where('ulid',$ulid)->first();
+    $product = Product::where('ulid', $ulid)->first();
     if ($product == null) {
       return response()->json(['message' => "Product not found"], 404);
     } else {
+      
       if ($product->category) {
         $product->category()->detach();
       }
@@ -102,8 +88,8 @@ class ProductService
 
   public function update($request, $id)
   {
-    $product = Product::with(['media', 'category'])->where('ulid',$id)->first();
-    
+    $product = Product::with(['media', 'category'])->where('ulid', $id)->first();
+
     if (!$product) {
       return response()->json(['message' => 'Product not found', 'success' => false], 404);
     } else {
@@ -143,7 +129,7 @@ class ProductService
           $media->delete();
         }
       }
-      return response()->json(['message' => 'product basic details and category updated successfully', 'product' => $product, 'success' => true], 200);
+      return response()->json(['message' => 'product updated successfully.', 'product' => $product, 'success' => true], 200);
     }
   }
 }
