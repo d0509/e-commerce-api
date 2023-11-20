@@ -21,6 +21,11 @@ class Media extends Model
         'size',
     ];
 
+
+    protected $hidden = [
+        'id'
+    ];
+
     public function uniqueIds()
     {
         return [
@@ -28,13 +33,16 @@ class Media extends Model
         ];
     }
 
-    public function getUrlAttribute()
-    {
-        return url(Storage::url("{$this->directory}/{$this->filename}.{$this->extension}"));
-    }
+    // public function getUrlAttribute()
+    // {
+    //     return url(Storage::url("{$this->directory}/{$this->filename}.{$this->extension}"));
+    // }
 
     public function getUrl()
     {
         return asset('storage/' . $this->directory . '/' . $this->filename . '.' . $this->extension);
     }
+
+   
+
 }

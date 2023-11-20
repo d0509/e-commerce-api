@@ -23,11 +23,11 @@ class Upsert extends FormRequest
         return [
             'name' => 'required|min:3',
             'description' => 'required',
-            'price' => 'required|numeric',
-            'quantity' => 'required|numeric',
+            'price' => 'required|numeric|min:1',
+            'quantity' => 'required|numeric|min:1',
             'is_active' => 'required|boolean',
             'category_id' => 'required|array|exists:categories,id',
-            'image' => 'required|exists:media,id',
+            'image' => 'required|exists:media,ulid',
             
         ];
     }

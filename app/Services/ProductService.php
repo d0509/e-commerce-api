@@ -17,7 +17,7 @@ class ProductService
 
   public function collection()
   {
-    $product = Product::with(['media','category'])->get();
+    $product = Product::with(['media', 'category'])->get();
     if (count($product) == 0) {
       return response()->json(['message' => 'Products not found', 'success' => false], 404);
     } else {
@@ -37,26 +37,35 @@ class ProductService
       $product->category()->attach($category);
     }
     if ($inputs->image) {
-      $images = $inputs->image;
-      foreach ($images as $image) {
+      foreach ($inputs->image as $image) {
+        $imageIds = Media::where('ulid', $image)->pluck('id')->toArray();
         Mediable::create([
-          'media_id' => $image,
+          'media_id' => $imageIds[0],
           'mediable_type' => Product::class,
           'mediable_id' => $product->id,
           'tag' => 'product',
         ]);
       }
     }
-    return response()->json(['message' => 'Product Created Successfully', 'success' => true, 'product' => $product], 200);
+    return response()->json([
+      'message' => 'Product Created Successfully',
+      'success' => true, 'product' => $product->load('media', 'category')
+    ], 200);
   }
 
   public function resource($ulid)
   {
     $product = Product::with(['media', 'category'])->where('ulid', $ulid)->first();
     if (!$product) {
-      return response()->json(['message' => 'Product not found.', 'success' => false], 404);
+      return response()->json([
+        'message' => 'Product not found.',
+        'success' => false
+      ], 404);
     } else {
-      return response()->json(['product' => $product, 'success' => true], 200);
+      return response()->json([
+        'product' => $product,
+        'success' => true
+      ], 200);
     }
   }
 
@@ -66,7 +75,7 @@ class ProductService
     if ($product == null) {
       return response()->json(['message' => "Product not found"], 404);
     } else {
-      
+
       if ($product->category) {
         $product->category()->detach();
       }
@@ -89,7 +98,7 @@ class ProductService
   public function update($request, $id)
   {
     $product = Product::with(['media', 'category'])->where('ulid', $id)->first();
-
+    // dd($product);
     if (!$product) {
       return response()->json(['message' => 'Product not found', 'success' => false], 404);
     } else {
@@ -103,13 +112,15 @@ class ProductService
 
       $product->category()->sync($request->input('category_id'));
 
-      $existingImage = Mediable::where('mediable_id', $id)->pluck('media_id')->toArray();
-      $newImage = $request->image;
+      $existingImage = $product->media->pluck('ulid')->toArray();
 
+      $newImage = $request->image;
+      // dd($newImage);
       $addedImages = array_diff($newImage, $existingImage);
       foreach ($addedImages as $addImage) {
+        $media = Media::where('ulid', $addImage)->first();
         Mediable::create([
-          'media_id' => $addImage,
+          'media_id' => $media->id,
           'mediable_type' => Product::class,
           'mediable_id' => $product->id,
           'tag' => 'product',
@@ -118,8 +129,7 @@ class ProductService
 
       $deleteImages = array_diff($existingImage, $newImage);
       foreach ($deleteImages as $imageId) {
-        $media = Media::find($imageId);
-
+        $media = Media::where('ulid', $imageId)->first();
         if ($media) {
           $filePath = public_path('storage/product/' . $media->filename . '.' . $media->extension);
           if (file_exists($filePath)) {
@@ -129,7 +139,8 @@ class ProductService
           $media->delete();
         }
       }
-      return response()->json(['message' => 'product updated successfully.', 'product' => $product, 'success' => true], 200);
+
+      return response()->json(['message' => 'product updated successfully.', 'product' => $product->load('media'), 'success' => true], 200);
     }
   }
 }
