@@ -16,9 +16,9 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return $this->productService->collection();
+        return $this->productService->collection($request);
     }
 
     public function store(Upsert $request)

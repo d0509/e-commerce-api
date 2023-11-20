@@ -14,12 +14,12 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Category::insert([
-            ['name' => 'Home & Kitchen'],
-            ['name' => 'Baby'],
-            ['name' => 'Electronics'],
-            ['name' => 'Sports & outdoors'],
-            ['name' => 'Pet Supplies '],
-            ['name' => 'Clothing, Shoes & Jewelry'],
+            ['name' => 'Home & Kitchen', 'slug' => 'home-kitchen'],
+            ['name' => 'Baby' , 'slug' => 'baby'],
+            ['name' => 'Electronics' , 'slug' => 'electronics'],
+            ['name' => 'Sports & outdoors' , 'slug' => 'sports-n-outdoor'],
+            ['name' => 'Pet Supplies ','slug' => 'pet-supplies'],
+            ['name' => 'Clothing, Shoes & Jewelry' , 'slug' => 'clothing-shoes-n-jewelry'],
         ]);
     }
 }

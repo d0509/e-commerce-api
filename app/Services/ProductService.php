@@ -15,8 +15,15 @@ class ProductService
     return $this->mediaService = $mediaService;
   }
 
-  public function collection()
+  public function collection($request)
   {
+    // dd($request['search']);
+    if($request->has('search')){
+      $product = Product::with(['media', 'category'])->where('name','like','%'. $request['search'] .'%',)->get();
+      return response()->json(['product' => $product, 'success' => true], 200);
+    } elseif($request->has('category')){
+      // $product = Product::with(['media','category'])->where('category')
+    }
     $product = Product::with(['media', 'category'])->get();
     if (count($product) == 0) {
       return response()->json(['message' => 'Products not found', 'success' => false], 404);
