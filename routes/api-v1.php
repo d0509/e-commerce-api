@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\MediaController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ Route::middleware('guest')->group(function () {
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('Logout');
-    Route::resource('user', UserController::class)->except('create','store');
-    Route::resource('product', ProductController::class);
+    Route::apiResource('user/profile', UserController::class)->only('index','update');
+    Route::apiResource('product', ProductController::class);
+    Route::apiResource('media',MediaController::class)->only('store','destroy');
 });

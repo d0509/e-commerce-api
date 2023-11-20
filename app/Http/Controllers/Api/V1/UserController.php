@@ -18,15 +18,15 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function index(Request $request){
-        return $this->userService->index($request);
+    public function index(){
+        return $this->userService->resource();
     }
 
     public function show(User $user){
-        return $this->userService->index($user);
+        return $this->userService->resource();
     }
 
-    public function update(Upsert $request, User $user){
-        return $this->userService->update($request,$user);
+    public function update(Upsert $request, string $ulid){
+        return $this->userService->update($request,$ulid);
     }
 }

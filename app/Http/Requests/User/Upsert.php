@@ -3,8 +3,6 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 
 class Upsert extends FormRequest
@@ -36,8 +34,9 @@ class Upsert extends FormRequest
         ];
 
         if($this->_method == 'PUT'){
-            $rules['email'] .=  Auth::id();
+            $rules['email'] .=  auth()->user()->id;
             $rules['avatar'] = 'nullable|image:jpeg,png,jpg,svg|max:2048';
+            // dd($rules);
         } else {
             $rules['password'] = 'required|min:6|max:10';
             $rules['confirm_password'] = 'required|same:password';
@@ -46,14 +45,5 @@ class Upsert extends FormRequest
 
         return $rules;
 
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
     }
 }

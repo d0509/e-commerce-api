@@ -3,41 +3,26 @@
 namespace App\Services;
 
 use App\Models\User;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class AuthService
 {
     public function signUp($inputs)
     {
-        try {
+        $user  = new User;
+        $user->fill($inputs->except('avatar'));
+        $originalName = $inputs->avatar->getClientOriginalName();
+        $timestamp = time();
+        $avatar = $timestamp . '_' . $originalName;
+        $user->avatar = $avatar;
+        $user->save();
 
-            $originalName = $inputs->avatar->getClientOriginalName();
-
-            $timestamp = time();
-
-            $avatar = $timestamp . '_' . $originalName;
-
-            User::create([
-                'first_name' => $inputs->first_name,
-                'last_name' => $inputs->last_name,
-                'email' => $inputs->email,
-                'password' => Hash::make($inputs->password),
-                'city_id' => $inputs->city_id,
-                'address' => $inputs->address,
-                'avatar' => $avatar,
-                'mobile_no'  => $inputs->mobile_no,
-            ]);
-
-            $inputs->avatar->move(public_path('/storage/avatar'), $avatar);
-            return response()->json(['message' => 'User Created Successfully', 'success' => true]);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e], 500);
-        }
+        $inputs->avatar->move(public_path('/storage/avatar'), $avatar);
+        return response()->json([
+            'message' => 'User Created Successfully',
+            'success' => true
+        ],200);
     }
 
     public function login($inputs)
@@ -54,9 +39,12 @@ class AuthService
         $token = $tokenResult->plainTextToken;
 
         return response()->json([
+            'message' => 'You have logged in successfully.',
             'accessToken' => $token,
             'token_type' => 'Bearer',
-        ]);
+            'user' => $user,
+            'success' => true,
+        ], 200);
     }
 
     public function logout($request)
